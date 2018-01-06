@@ -2,9 +2,6 @@ package codeship
 
 import (
 	"context"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 	"strings"
 )
 
@@ -70,78 +67,24 @@ type Branch struct {
 	MatchMode  string `json:"match_mode"`  // "exact"
 }
 
-func createproject() {
-
-	url := defaultBaseURL + "/organizations/" + orguuid + "/projects"
-
+func createproject(orguuid string) {
 	payload := strings.NewReader("{\"repository_url\":\"https://github.com/codeship/documentation.git\",\"type\":\"basic\",\"team_ids\":[99173438,64874098,74618189,92403869],\"notification_rules\":[{\"notifier\":\"webhook\",\"branch\":\"development\",\"options\":{\"url\":\"https://localhost/webhook\"}}],\"deployment_pipelines\":[{\"branch\":{\"branch_name\":\"master\",\"match_mode\":\"exact\"},\"config\":[\"./deploy_master.sh\"],\"postion\":1}],\"setup_commands\":[\"nvm install 6\"],\"environment_variables\":[{\"name\":\"env_name_1\",\"value\":\"foo\"},{\"name\":\"env_name_2\",\"value\":\"bar\"}],\"test_pipelines\":[{\"name\":\"Tests\",\"commands\":[\"npm test\"]}]}")
-
-	req, _ := http.NewRequest("POST", url, payload)
-
-	req.Header.Add("content-type", "application/json")
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	fmt.Println(res)
-	fmt.Println(string(body))
-
+	url, _ := urljoin(APIEndpointBase, APIEndpointCreateProject)
+	httppost(ctx, url, payload)
 }
 
-func getproject() {
-
-	url := defaultBaseURL + "/organizations/" + orguuid + "/projects/" + builduuid
-
-	payload := strings.NewReader("{}")
-
-	req, _ := http.NewRequest("GET", url, payload)
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	fmt.Println(res)
-	fmt.Println(string(body))
-
+func getproject(orguuid string, projectuuid string) {
+	url, _ := urljoin(APIEndpointBase, APIEndpointGetProject)
+	httpget(ctx, url)
 }
 
-func listprojects() {
-
-	url := defaultBaseURL + "/organizations/" + orguuid + "/projects"
-
-	payload := strings.NewReader("{}")
-
-	req, _ := http.NewRequest("GET", url, payload)
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	fmt.Println(res)
-	fmt.Println(string(body))
-
+func listprojects(orguuid string) {
+	url, _ := urljoin(APIEndpointBase, APIEndpointListProjects)
+	httpget(ctx, url)
 }
 
-func updateproject() {
-
-	url := defaultBaseURL + "/organizations/" + orguuid + "/projects/" + builduuid
-
+func updateproject(orguuid string, projectuuid string) {
 	payload := strings.NewReader("{\"type\":\"string (required)\",\"setup_commands\":[\"string\"],\"team_ids\":[\"number\"],\"notification_rules\":[{\"notifier\":\"string (optional)\",\"email_target\":\"string (optional)\",\"branch\":\"string (optional)\",\"options\":{\"slack\":{\"key\":\"string (optional)\"},\"webhook\":{\"url\":\"string (optional)\"},\"hipchat\":{\"key\":\"string (optional)\",\"room\":\"string (optional)\"},\"campfire\":{\"key\":\"string (optional)\",\"room\":\"string (optional)\",\"domain\":\"string (optional)\"},\"grove\":{\"key\":\"string (optional)\"},\"flowdock\":{\"key\":\"string (optional)\"}}}],\"environment_variables\":[{\"name\":\"string (optional)\",\"value\":\"string (optional)\"}]}")
-
-	req, _ := http.NewRequest("PUT", url, payload)
-
-	req.Header.Add("content-type", "application/json")
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	fmt.Println(res)
-	fmt.Println(string(body))
-
+	url, _ := urljoin(APIEndpointBase, APIEndpointUpdateProject)
+	httpput(ctx, url, payload)
 }
