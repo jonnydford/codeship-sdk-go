@@ -46,13 +46,11 @@ func basicAuth(username, password string) string {
 
 func authenticate() {
 
-	url := defaultBaseURL + "auth"
-
 	payload := strings.NewReader("{}")
 
-	req, _ := http.NewRequest("POST", url, payload)
+	req, _ := http.NewRequest("POST", APIEndpointAuth, payload)
 
-	req.Header.Add("content-type", "text/plain")
+	req.Header.Add("content-type", jsonType)
 	req.Header.Add("Authorization", "Basic "+basicAuth("username", "password"))
 
 	res, _ := http.DefaultClient.Do(req)
