@@ -1,34 +1,38 @@
 package codeship
 
-import "net/http"
-
-const (
-	defaultBaseURL = "https://api.codeship.com/v2"
-	mediaType      = "application/json"
+import (
+	"net/http"
+	"net/url"
 )
 
-// Response is a DigitalOcean response. This wraps the standard http.Response returned from DigitalOcean.
-type Response struct {
-	*http.Response
+// APIEndpoint constants
+const (
+	APIEndpointBase              = "https://api.codeship.com/v2"
+	APIEndpointAuth              = "auth"
+	APIEndpointCreateBuild       = "/organizations/%s/projects/%s/builds"              // orguuid / projectuuid
+	APIEndpointGetBuild          = "/organizations/%s/projects/%s/builds/%s"           // orguuid / projectuuid / builduuid
+	APIEndpointListBuilds        = "/organizations/%s/projects/%s/builds"              // orguuid / projectuuid
+	APIEndpointGetBuildPipelines = "/organizations/%s/projects/%s/builds/%s/pipelines" // orguuid / projectuuid / builduuid
+	APIEndpointStopBuild         = "/organizations/%s/projects/%s/builds/%s/stop"      // orguuid / projectuuid / builduuid
+	APIEndpointRestartBuild      = "/organizations/%s/projects/%s/builds/%s/restart"   // orguuid / projectuuid / builduuid
+	APIEndpointGetBuildServices  = "/organizations/%s/projects/%s/builds/%s/services"  // orguuid / projectuuid / builduuid
+	APIEndpointGetBuildSteps     = "/organizations/%s/projects/%s/builds/%s/steps"     // orguuid / projectuuid / builduuid
+	APIEndpointCreateProject     = "/organizations/%s/projects"                        // orguuid
+	APIEndpointGetProject        = "/organizations/%s/projects/%s"                     // orguuid / projectuuid
+	APIEndpointListProjects      = "/organizations/%s/projects"                        // orguuid
+	APIEndpointUpdateProject     = "/organizations/%s/projects/%s"                     // orguuid / projectuuid
+)
 
-	// Links that were returned with the response. These are parsed from
-	// request body and not the header.
-	Links *Links
+// Header Types constants
+const (
+	jsonType  = "application/json"
+	plainType = "text/plain"
+)
 
-	// Monitoring URI
-	Monitor string
-
-	Rate
-}
-
-// An ErrorResponse reports the error caused by an API request
-type ErrorResponse struct {
-	// HTTP response that caused this error
-	Response *http.Response
-
-	// Error message
-	Message string `json:"message"`
-
-	// RequestID returned from the API, useful to contact support.
-	RequestID string `json:"request_id"`
+// Client type
+type Client struct {
+	channelSecret string
+	channelToken  string
+	endpointBase  *url.URL     // default APIEndpointBase
+	httpClient    *http.Client // default http.DefaultClient
 }
