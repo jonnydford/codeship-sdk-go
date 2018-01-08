@@ -2,7 +2,6 @@ package codeship
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -39,11 +38,6 @@ type Scopes struct {
 	orgscopes []string `json:"scopes"`
 }
 
-func basicAuth(username, password string) string {
-	auth := username + ":" + password
-	return base64.StdEncoding.EncodeToString([]byte(auth))
-}
-
 func authenticate() {
 
 	payload := strings.NewReader("{}")
@@ -51,7 +45,7 @@ func authenticate() {
 	req, _ := http.NewRequest("POST", APIEndpointAuth, payload)
 
 	req.Header.Add("content-type", jsonType)
-	req.Header.Add("Authorization", "Basic "+basicAuth("username", "password"))
+	req.SetBasicAuth(user, password)
 
 	res, _ := http.DefaultClient.Do(req)
 
