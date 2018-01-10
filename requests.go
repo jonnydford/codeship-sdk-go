@@ -1,4 +1,4 @@
-package codeship
+package main
 
 import (
 	"context"

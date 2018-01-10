@@ -1,6 +1,9 @@
-package codeship
+package main
 
 import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
 	"strings"
 )
 
@@ -19,6 +22,14 @@ func createbuild(orguuid string, projectuuid string) {
 func getbuild(orguuid string, projectuuid string, builduuid string) {
 	url, _ := urljoin(APIEndpointBase, APIEndpointGetBuild)
 	httpget(ctx, url)
+
+	req, _ := http.NewRequest("GET", url, payload)
+	req.Header.Add("content-type", "application/json")
+	res, _ := http.DefaultClient.Do(req)
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
+	fmt.Println(res)
+	fmt.Println(string(body))
 }
 
 func listbuilds(orguuid string, projectuuid string) {

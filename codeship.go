@@ -1,14 +1,13 @@
-package codeship
+package main
 
 import (
-	"net/http"
-	"net/url"
+	"github.com/jonnydford/codeship-sdk-go/authentication"
 )
 
 // APIEndpoint constants
 const (
 	APIEndpointBase              = "https://api.codeship.com/v2"
-	APIEndpointAuth              = "auth"
+	APIEndpointAuth              = "/auth"
 	APIEndpointCreateBuild       = "/organizations/%s/projects/%s/builds"              // orguuid / projectuuid
 	APIEndpointGetBuild          = "/organizations/%s/projects/%s/builds/%s"           // orguuid / projectuuid / builduuid
 	APIEndpointListBuilds        = "/organizations/%s/projects/%s/builds"              // orguuid / projectuuid
@@ -21,18 +20,12 @@ const (
 	APIEndpointGetProject        = "/organizations/%s/projects/%s"                     // orguuid / projectuuid
 	APIEndpointListProjects      = "/organizations/%s/projects"                        // orguuid
 	APIEndpointUpdateProject     = "/organizations/%s/projects/%s"                     // orguuid / projectuuid
+	user                         = ""
+	password                     = ""
+	jsonType                     = "application/json"
+	plainType                    = "text/plain"
 )
 
-// Header Types constants
-const (
-	jsonType  = "application/json"
-	plainType = "text/plain"
-)
-
-// Client type
-type Client struct {
-	channelSecret string
-	channelToken  string
-	endpointBase  *url.URL     // default APIEndpointBase
-	httpClient    *http.Client // default http.DefaultClient
+func main() {
+	authentication.Authenticate(user, password)
 }
